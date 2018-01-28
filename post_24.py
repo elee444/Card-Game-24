@@ -1,6 +1,7 @@
 # you enter 4 integers (1-10) or it can generate 4 integers.
 # Determine if 24 can be the outcome after applying +,-,*,+ on these
-# 4 numbers (each is used one and only one time).
+# 4 numbers (each is used one and only one time). Furthermore, it is
+##required that each operation results in integer.
 # Use post-order representation to avoid parentheses
 ##
 #!/usr/bin/python3
@@ -20,8 +21,9 @@ def postfixEval(postfixExpr):
         else:
             operand2 = operandStack.pop()
             operand1 = operandStack.pop()
-            if token == "/" and operand2 == 0:
-                return 0
+            if (token =="/"): #true division not integer division
+                if (operand2==0 or operand1 % operand2!=0):  #watch out exceptions
+                    return 0
             result = doMath(token, operand1, operand2)
             operandStack.append(result)
     return operandStack.pop()
@@ -46,25 +48,10 @@ def done(mylist):
     quit()
 
 
-'''
-val=int(input("\nIf you want to enter the number youself, enter 1.  Otherwise enter 0: "))
-if val==0:
-    for i in range (4):
-        x[i]=str(randint(1,10))
-else:
-    #manual input
-    val1=int(input("\nEnter the first number (1-10): "))
-    val2=int(input("\nEnter the second number (1-10): "))
-    val3=int(input("\nEnter the third number (1-10): "))
-    val4=int(input("\nEnter the fourth number (1-10): "))
-    x[0]=str(val1)
-    x[1]=str(val2)
-    x[2]=str(val3)
-    x[3]=str(val4)
-'''
 
 
 def compute(listx):
+#if __name__ == "__main__":
     x = listx
     target = 24
     #print('\nThe numbers are : ')
@@ -72,6 +59,8 @@ def compute(listx):
 
     input('\nCan you find 24 ? Hit Enter key to see the answer.')
 
+    found=False
+    ans=[]
 # Each 4-tuple of number needs only 3 opeartions
 # Let's run through all possible collections of 3-operation, i.e. chooses
 # 3 out of 4 operations with replacement.
@@ -87,9 +76,15 @@ def compute(listx):
             res = [postfixEval(pl) for pl in st]
             for idx, val in enumerate(res):
                 if (val == target):
-                    done(st[idx])
-    print('\nNo Answer found!')
-    return
+                    found=True
+                    ans.append(st[idx])
+                    #done(st[idx])
+    if (found==False):
+        print("No Answer found!")
+    else:
+        print("Number of answers is :",len(ans))
+        for a in ans:
+            print(a)
 
 #compute(['6','8','9','10'])
 #compute(['6','3','7','8'])
